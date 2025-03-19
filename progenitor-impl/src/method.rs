@@ -19,6 +19,7 @@ use crate::{
 use crate::{to_schema::ToSchema, util::ReferenceOrExt};
 
 /// The intermediate representation of an operation that will become a method.
+#[derive(Debug)]
 pub(crate) struct OperationMethod {
     pub operation_id: String,
     pub tags: Vec<String>,
@@ -32,6 +33,7 @@ pub(crate) struct OperationMethod {
     dropshot_websocket: bool,
 }
 
+#[derive(Debug)]
 pub enum HttpMethod {
     Get,
     Put,
@@ -75,23 +77,27 @@ impl HttpMethod {
     }
 }
 
+#[derive(Debug)]
 struct MethodSigBody {
     success: TokenStream,
     error: TokenStream,
     body: TokenStream,
 }
 
+#[derive(Debug)]
 struct BuilderImpl {
     doc: String,
     sig: TokenStream,
     body: TokenStream,
 }
 
+#[derive(Debug)]
 pub struct DropshotPagination {
     pub item: TypeId,
     pub first_page_params: Vec<String>,
 }
 
+#[derive(Debug)]
 pub struct OperationParameter {
     /// Sanitized parameter name.
     pub name: String,
@@ -102,7 +108,7 @@ pub struct OperationParameter {
     pub kind: OperationParameterKind,
 }
 
-#[derive(Eq, PartialEq)]
+#[derive(Eq, PartialEq, Debug)]
 pub enum OperationParameterType {
     Type(TypeId),
     RawBody,

@@ -23,6 +23,7 @@ pub use typify::UnknownPolicy;
 mod cli;
 mod httpmock;
 mod method;
+mod nu;
 mod template;
 mod to_schema;
 mod util;
