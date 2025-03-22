@@ -275,11 +275,14 @@ impl Generator {
                     // as the full limit. It's not ideal in that we could
                     // reduce the limit with each iteration and we might get a
                     // bunch of results we don't display... but it's fine.
-                    let mut stream = futures::StreamExt::take(
-                        request.stream(),
-                        call
-                            .get_flag::<std::num::NonZeroU32>(engine_state, stack, "limit")
-                            .map_or(usize::MAX, |x| x.unwrap().get() as usize));
+                    let limit = call
+                        .get_flag::<std::num::NonZeroU32>(engine_state, stack, "limit")
+                        .map_or(usize::MAX, |x| match x {
+                            Some(x) => x.get() as usize,
+                            None => usize::MAX,
+                        } as usize);
+
+                    let mut stream = futures::StreamExt::take(request.stream(), limit);
 
                     let mut results = vec![];
                     loop {
@@ -307,9 +310,8 @@ impl Generator {
                 -> anyhow::Result<Value>
             {
                 let span = call.head;
-                let guard = state.lock().unwrap();
 
-                let mut request = guard.client.#op_name();
+                let mut request = client.#op_name();
                 #consumer_args
 
                 #execute_and_output
